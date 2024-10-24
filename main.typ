@@ -63,27 +63,116 @@
 
 == Deductive Systems
 
+- a collection of rules that take in hypothetical judgements and conclude a new judgement
+
 == Judgements
+
+- term judgement
+- type judgement
+- substitution judgement
+
+- contexts are lists of dependent term judgements
+- substitutions shifts judgements from one context to another
+- *example*
 
 == *Definitional Equality*
 
+- definitional equality of terms judgement
+- definitional equality of types judgement
+
+- an axiom of the theory i.e. equality by syntax
+- *example*
+
 == Natural Models
+
+- substitution application
+  - substitution of term rule
+  - substitution of type rule
+- morphism structure rules
+  - identity substitution axiom
+  - substitution composition rule
+  - associativity of substitution composition rule
+- pullback structure rules
+  - variable rule
+    - debruijn indices
+    - *example*
+  - weakening rule
+    - *example*
+  - context extension rule
+    - *example*
 
 == Mapping In Types
 
+- to make a type we need
+  - formation rule
+  - introduction rule
+  - elimination rule
+  - computation rule / beta rule
+  - uniqueness rule / eta rule
+- type former
+- isomorphism
+- *example unit type*
+- *example pi type*
+- *example sigma type*
+
 == Naturality
 
+- naturality square
+
 == *Extensional Equality*
+
+- *example Eq type*
+- equality reflection rule as elimination rule
+- propositional equality
+  - internalization of definitional equality
+- *example Eq(N,a+b,b+a)*
+- UIP
+- on metatheory; normalization of extensional type theory
 
 = Id and Univalence in HoTT
 
 == Mapping Out Types
 
+- isomorphism
+- type, signature, initial algebra table
+- *example unit type*
+- *example bool type*
+- *example A + B type*
+- *example Nat type*
+- *example void type*
+- elim rule as recursor
+- intro rule as initial algebra constructors
+
 == *Intensional Equality*
+
+- *example Id type*
+- elim rule as J rule
+  - construct subst
+    - construct sym
+    - construct trans
+    - construct cong
+  - construct uniq
+- no UIP; briefly on Hoffman-Streicher Groupoid Model
+- no funext; briefly on J being trivial in extensional TT
+- hoffman conservativity theorem
 
 == Universes
 
+- isomorphism
+  - code
+  - El
+- lift
+- uni
+- cumulative universes; to avoid impredicativity; paradoxes
+
 == *Univalence*
+
+- a specific $C$ in $"Tm"(Gamma."Id"(U,A,B),C)$
+- bimaps / iso : HProp
+  - construction
+- contractible fibres / equiv : U
+  - construction
+- axioms break canonicity
 
 = Univalent Parametricity
 
