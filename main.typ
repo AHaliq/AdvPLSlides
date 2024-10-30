@@ -43,9 +43,9 @@
   aspect-ratio: "16-9",
   // config-common(handout: true),
   config-info(
-    title: [Equality and Isomorphisms in Type Theory],
-    subtitle: [Substitution Calculus and Eq],
-    author: [Abdul Haliq Abdul Latiff (202303466) \ Alexander Dybdahl Troelsen (202008975)],
+    title: [H.O.T.T. from scratch],
+    subtitle: [Equality and Isomorphisms in Type Theory],
+    author: [Abdul Haliq Abdul Latiff (202303466)],
     date: datetime.today(),
     institution: [Aarhus University],
   ),
@@ -59,7 +59,7 @@
 
 #components.adaptive-columns(outline(title: none, indent: 1em))
 
-= Substitution Calculus and Eq
+= HoTT from scratch
 
 == Deductive Systems
 
@@ -129,8 +129,6 @@
 - UIP
 - on metatheory; normalization of extensional type theory
 
-= Id and Univalence in HoTT
-
 == Mapping Out Types
 
 - isomorphism
@@ -174,6 +172,10 @@
   - construction
 - axioms break canonicity
 
-= Univalent Parametricity
+= HOTT from HoTT
 
-= `trocq`
+== Observational Equality
+
+== Parametricity
+
+== *Parametric Univalence*
