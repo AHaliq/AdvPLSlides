@@ -1,13 +1,13 @@
 #import "@preview/touying:0.5.3": *
-#import themes.university: *
-#import "@preview/cetz:0.2.2"
-#import "@preview/fletcher:0.5.1" as fletcher: node, edge
-#import "@preview/ctheorems:1.1.2": *
+#import themes.metropolis: *
+#import "@preview/cetz:0.3.1"
+#import "@preview/fletcher:0.5.2" as fletcher: node, edge
+#import "@preview/ctheorems:1.1.3": *
 #import "@preview/curryst:0.3.0": rule, proof-tree
 #import "@preview/numbly:0.1.0": numbly
 #import "./catt.typ": *
 #import "./dtt.typ": *
-#show: university-theme.with(aspect-ratio: "16-9")
+#show: metropolis-theme.with(aspect-ratio: "16-9")
 
 // Pdfpc configuration
 // typst query --root . ./example.typ --field value --one "<pdfpc-file>" > ./example.pdfpc
@@ -27,6 +27,51 @@
   ),
 )
 
+// Custom Table Styling
+#let toptable = (..content) => {
+  table(
+    fill: (x, y) => if y == 0 {
+      silver
+    },
+    stroke: (x, y) => if y == 0 {
+      (
+        top: (thickness: 1pt, paint: silver),
+      )
+    } else if y > 0 {
+      (
+        top: (thickness: 1pt, paint: silver),
+        left: (thickness: 1pt, paint: silver),
+        right: (thickness: 1pt, paint: silver),
+        bottom: (thickness: 1pt, paint: silver),
+      )
+    },
+    inset: 7pt,
+    ..content,
+  )
+}
+
+#let lefttable = (..content) => {
+  table(
+    fill: (x, y) => if x == 0 {
+      silver
+    },
+    stroke: (x, y) => if x == 0 {
+      (
+        right: (thickness: 1pt, paint: silver),
+      )
+    } else if x > 0 {
+      (
+        top: (thickness: 1pt, paint: silver),
+        left: (thickness: 1pt, paint: silver),
+        right: (thickness: 1pt, paint: silver),
+        bottom: (thickness: 1pt, paint: silver),
+      )
+    },
+    inset: 7pt,
+    ..content
+  )
+}
+
 
 // Theorems configuration by ctheorems
 #show: thmrules.with(qed-symbol: $square$)
@@ -41,14 +86,14 @@
 #let example = thmbox("example", "example", fill: rgb("#eeeeee")).with(numbering: none)
 #let proof = thmproof("proof", "Proof")
 
-#let boxify = (content) => box(fill: rgb("#eeeeee"), inset: 0.5em, [#content])
+#let boxify = (content) => box(fill: silver, inset: 0.5em, [#content])
 
-#show: university-theme.with(
+#show: metropolis-theme.with(
   aspect-ratio: "16-9",
   // config-common(handout: true),
   config-info(
-    title: [H.O.T.T. from scratch],
-    subtitle: [Equality and Isomorphisms in Type Theory],
+    title: [Equality and Isomorphisms in Type Theory],
+    subtitle: [H.O.T.T. from scratch],
     author: [Abdul Haliq],
     date: datetime.today(),
     institution: [Aarhus University],
@@ -67,8 +112,7 @@
 
 == Deductive Systems
 
-#pause
-- *Deductive Systems*: a collection of rules #pause
+- *Deductive System*: a collection of rules #pause
 - *Rule*: takes hypotheses and gives a conclusion
 #figure(proof-tree(rule(
   $cal(C)$,
@@ -87,9 +131,10 @@
 
 #slide(repeat: 10, self => [
   #let (uncover, only, alternatives) = utils.methods(self)
-Substitution Calculus Judgements
+#align(center)[#smallcaps("Substitution Calculus Judgements")]
 
-#figure(table(
+#{
+figure(toptable(
   columns: 4,
   align: (center + horizon, center + horizon, center + horizon, center + horizon),
   [Context], [Type], [Term], [Substitution],
@@ -98,6 +143,7 @@ Substitution Calculus Judgements
   [$Gamma hy a : A$#pause],
   [$Delta hy gamma : Gamma$ #pause]
 ))
+}
 - *Context*: lists of dependent terms
 #alternatives[][][][][
 $
@@ -116,7 +162,7 @@ $
   a_1 : A_1,
   a_2 : A_2(a_1),
   a_3 : A_3(a_1, a_2),
-  ... a_n : A_n(a_1, a_2, ..., a_(n-1))
+  ... a_n : A_n (a_1, a_2, ..., a_(n-1))
 $][
 $
  A_1.A_2.A_3. #h(0.25em)... #h(0.25em) .A_n
@@ -132,8 +178,9 @@ $]
 ])
 == *Definitional Equality*
 
-Substitution Calculus Equality Judgements
-#figure(table(
+
+#align(center)[#smallcaps("Substitution Calculus Equality Judgements")]
+#figure(toptable(
   columns: 3,
   align: (center + horizon, center + horizon, center + horizon),
   [Type], [Term], [Substitution],
@@ -142,7 +189,6 @@ Substitution Calculus Equality Judgements
   [$Delta hy gamma = delta : Gamma$ #pause]
 ))
 
-#pause
 #align(center)[
 _definitionally equal symbols can be replaced by each other_
 ]
@@ -163,8 +209,10 @@ _definitionally equal symbols can be replaced by each other_
 
 #slide(repeat: 12, self => [
   #let (uncover, only, alternatives) = utils.methods(self)
-Substitution Calculus Rules
-#figure(table(
+
+#align(center)[#smallcaps("Substitution Calculus Rules")]
+#{
+figure(lefttable(
   columns: 4,
   align: (center + horizon, center + horizon, center + horizon, center + horizon),
   [$gamma$ Application],
@@ -180,6 +228,7 @@ Substitution Calculus Rules
   alternatives[][][][][][][][*variable*][*variable*][*variable*][*variable*][variable],
   alternatives[][][][][][][][][][][][*substitution extension*][substitution extension],
 ))
+}
 #alternatives[
   #figure(proof-tree(
     rule(
@@ -227,7 +276,7 @@ Substitution Calculus Rules
   #figure(proof-tree(
     rule(
       name: [associativity],
-      $Gamma_2 hy gamma_0 comp (gamma_1 comp gamma_2) = (gamma_0 comp gamma_1) comp gamma_2 : Gamma_0$,
+      $Gamma_3 hy gamma_0 comp (gamma_1 comp gamma_2) = (gamma_0 comp gamma_1) comp gamma_2 : Gamma_0$,
       $Gamma_1 hy gamma_0 : Gamma_0$,
       $Gamma_2 hy gamma_1 : Gamma_1$,
       $Gamma_3 hy gamma_2 : Gamma_2$
@@ -324,124 +373,145 @@ $
 #pause
 - *Type Constructor*: $Upsilon : (X:H) -> Ty(Gamma)$
 #pause
-- to make a type we need:
-  - *formation rule*: $Upsilon$ #pause
-  - *introduction rule*: $iota_(Gamma,X)^(-1)$ #pause
-  - *elimination rule*: $iota_(Gamma,X)$ #pause
-- optionally
-  - *computation rule / $beta$ rule*: $iota_(Gamma,X) comp iota_(Gamma,X)^(-1) = id$ #pause
-  - *uniqueness rule / $eta$ rule*: $iota_(Gamma,X)^(-1) comp iota_(Gamma,X) = id$
+#figure(lefttable(
+  columns: 2,
+  align: (center + horizon, center + horizon),
+  [Formation], $Upsilon$, pause,
+  [Introduction], $iota_(Gamma,X)^(-1)$, pause,
+  [Elimination], $iota_(Gamma,X)$, pause,
+  [Computation / $beta$], $iota_(Gamma,X) comp iota_(Gamma,X)^(-1) = id$, pause,
+  [Uniqueness / $eta$], $iota_(Gamma,X)^(-1) comp iota_(Gamma,X) = id$
+))
 
 #pagebreak()
 
-#figure(boxify([
 $
   iota_Gamma : Tm(Gamma, Pi(A,B)) iso Tm(Gamma. A, B)
 $
-#pause
-#figure(proof-tree(
-  rule(
-    name: [$Pi$-formation],
-    $Gamma hy Pi(A,B) Ty$,
-    $Gamma hy A Ty$,
-    $Gamma. A hy B Ty$
-  )
+#figure(lefttable(
+  columns: 2,
+  align: (center + horizon, center + horizon),
+  [Formation], 
+  figure(proof-tree(
+    rule(
+      name: [$Pi$-formation],
+      $Gamma hy Pi(A,B) Ty$,
+      $Gamma hy A Ty$,
+      $Gamma. A hy B Ty$
+    )
+  )), pause,
+  [Introduction],
+  figure(proof-tree(
+    rule(
+      name: [$Pi$-intro],
+      $Gamma hy lambda (b) : Pi(A,B)$,
+      $Gamma. A hy b : B$
+    )
+  )), pause,
+  [Elimination],
+  figure(proof-tree(
+    rule(
+      name: [$Pi$-elim],
+      $Gamma hy upright(bold("app"))(f,a) : B[id. a]$,
+      $Gamma hy a : A$,
+      $Gamma hy f : Pi(A,B)$,
+    )
+  )), pause,
+  [Computation / $beta$],
+  figure(proof-tree(
+    rule(
+      name: [$Pi-beta$],
+      $upright(bold("app"))(lambda(b), a) = b[id. a] : B[id. a]$,
+      $Gamma hy a : A$,
+      $Gamma. A hy b : B$
+    )
+  )), pause,
+  [Uniqueness / $eta$],
+  figure(proof-tree(
+    rule(
+      name: [$Pi-eta$],
+      $lambda(upright(bold("app"))(f[sp], sq)) = f : Pi(A,B)$,
+      $Gamma hy f : Pi(A,B)$
+    )
+  ))
 ))
-#pause
-#figure(proof-tree(
-  rule(
-    name: [$Pi$-intro],
-    $Gamma hy lambda (b) : Pi(A,B)$,
-    $Gamma. A hy b : B$
-  )
-))
-#pause
-#figure(proof-tree(
-  rule(
-    name: [$Pi$-elim],
-    $Gamma hy upright(bold("app"))(f,a) : B[id. a]$,
-    $Gamma hy a : A$,
-    $Gamma hy f : Pi(A,B)$,
-  )
-))
-]))
 
 #pagebreak()
 
-#figure(boxify([
+
 $
   iota_Gamma : Tm(Gamma, Sigma(A,B)) iso bold(upright(Sigma))_(a:Tm(Gamma, A)) Tm(Gamma, B[id. a])
 $
-_think of $bold(upright(Sigma))$ as metatheory $Sigma$, thus set of dependent pairs_
+#align(center)[_think of $bold(upright(Sigma))$ as metatheory $Sigma$, thus set of dependent pairs_]
 
-#pause
-
-#figure(proof-tree(
-  rule(
-    name: [$Sigma$-formation],
-    $Gamma hy Sigma(A,B) Ty$,
-    $Gamma hy A Ty$,
-    $Gamma. A hy B Ty$
-  )
+#figure(lefttable(
+  columns: 2,
+  align: (center + horizon, center + horizon),
+  [Formation], 
+  figure(proof-tree(
+    rule(
+      name: [$Sigma$-formation],
+      $Gamma hy Sigma(A,B) Ty$,
+      $Gamma hy A Ty$,
+      $Gamma. A hy B Ty$
+    )
+  )), pause,
+  [Introduction],
+  figure(proof-tree(
+    rule(
+      name: [$Sigma$-intro],
+      $Gamma hy upright(bold("pair"))(a,b) : Sigma(A,B)$,
+      $Gamma hy a : A$,
+      $Gamma hy b : B[id. a]$
+    )
+  )), pause,
+  [Elimination 1],
+  figure(proof-tree(
+    rule(
+      name: [$Sigma$-elim$\ _1$],
+      $Gamma hy upright(bold("fst"))(p) : A$,
+      $Gamma hy p : Sigma(A,B)$,
+    )
+  )), pause,
+  [Elimination 2],
+  figure(proof-tree(
+    rule(
+      name: [$Sigma$-elim$\ _2$],
+      $Gamma hy upright(bold("snd"))(p) : B[id. upright(bold("fst"))(p)]$,
+      $Gamma hy p : Sigma(A,B)$,
+    )
+  ))
 ))
-#pause
-
-#figure(proof-tree(
-  rule(
-    name: [$Sigma$-intro],
-    $Gamma hy upright(bold("pair"))(a,b) : Sigma(A,B)$,
-    $Gamma hy a : A$,
-    $Gamma hy b : B[id. a]$
-  )
-))
-
-#pause
-
-#grid(columns:2,
-figure(proof-tree(
-  rule(
-    name: [$Sigma$-elim$\ _1$],
-    $Gamma hy upright(bold("fst"))(p) : A$,
-    $Gamma hy p : Sigma(A,B)$,
-  )
-)),
-pause,
-figure(proof-tree(
-  rule(
-    name: [$Sigma$-elim$\ _2$],
-    $Gamma hy upright(bold("snd"))(p) : B[id. upright(bold("fst"))(p)]$,
-    $Gamma hy p : Sigma(A,B)$,
-  )
-)))
-]))
 
 #pagebreak()
 
-#figure(boxify([
 $
   iota_Unit : Tm(Gamma, Unit) iso {star}
 $
-#pause
-#figure(proof-tree(
-  rule(
-    name: [Unit-formation],
-    $Gamma hy Unit Ty$
-  )
-))
-#pause
-#figure(proof-tree(
-  rule(
-    name: [Unit-intro],
-    $Gamma hy tt : Unit$,
-    $Gamma hy Unit Ty$
-  )
-))
-#pause
-_what about the elimination rule?_
-#pause
 
-_we will see in mapping out types_
-]))
+#figure(lefttable(
+  columns: 2,
+  align: (center + horizon, center + horizon),
+  [Formation], 
+  figure(proof-tree(
+    rule(
+      name: [Unit-formation],
+      $Gamma hy Unit Ty$
+    )
+  )), pause,
+  [Introduction],
+  figure(proof-tree(
+    rule(
+      name: [Unit-intro],
+      $Gamma hy tt : Unit$,
+      $Gamma hy Unit Ty$
+    )
+  )), pause,
+  [Elimination],
+  [_what about the elimination rule?_]
+))
+
+#align(center)[_we will see in mapping out types_]
 
 == Naturality
 
@@ -463,37 +533,40 @@ _we have to define rules for these as well for the types and terms of  $Upsilon$
 
 == *Extensional Equality*
 
-#figure(boxify([
 $
   iota_Gamma : Tm(Gamma, Eq(A,a,b)) iso {star | a = b}
 $
-#pause
-#figure(proof-tree(
-  rule(
-    name: [Eq-formation],
-    $Gamma hy Eq(A,a,b) Ty$,
-    $Gamma hy A Ty$,
-    $Gamma hy a : A$,
-    $Gamma hy b : A$
-  )
+
+#figure(lefttable(
+  columns: 2,
+  align: (center + horizon, center + horizon),
+  [Formation], 
+  figure(proof-tree(
+    rule(
+      name: [Eq-formation],
+      $Gamma hy Eq(A,a,b) Ty$,
+      $Gamma hy A Ty$,
+      $Gamma hy a : A$,
+      $Gamma hy b : A$
+    )
+  )), pause,
+  [Introduction],
+  figure(proof-tree(
+    rule(
+      name: [Eq-intro],
+      $Gamma hy refl : Eq(A,a,a)$,
+      $Gamma hy a : A$
+    )
+  )), pause,
+  [Elimination],
+  figure(proof-tree(
+    rule(
+      name: [Eq-reflection],
+      $Gamma hy a = b : A$,
+      $Gamma hy p : Eq(A,a,b)$
+    )
+  ))
 ))
-#pause
-#figure(proof-tree(
-  rule(
-    name: [Eq-intro],
-    $Gamma hy refl : Eq(A,a,a)$,
-    $Gamma hy a : A$
-  )
-))
-#pause
-#figure(proof-tree(
-  rule(
-    name: [Eq-reflection],
-    $Gamma hy a = b : A$,
-    $Gamma hy p : Eq(A,a,b)$
-  )
-))
-]))
 
 #pagebreak()
 
@@ -504,12 +577,12 @@ $
     $Gamma hy p : Eq(A,a,b)$
   )
 ))
-- *Propositional Equality*: equality is an object within the theory e.g.
+#align(center)[_Notice how elimination concludes a definitional equality judgement of terms rather than a term judgement. This departs from the usual elimination rules we have seen before._]
+#pause
+- *Propositional Equality*: equality is *internalized* within the theory e.g.
 $
   a = b : A arrow.b p:Eq(A,a,b) arrow.t a = b : A
 $
-#pause
-- notice how elimination concludes a definitional equality of terms
 #pause
 - if we have a proof of equality, we can swap terms (definitionally)
 #pause
@@ -522,20 +595,18 @@ $
 #pause
 - *Normalization*: with UIP our types aren't injective, without injective types we can't have normalization#pause; (we won't explore why here, but lets take it for granted for now)
 #pause
-_Without normalization we can't have decidable type checking!_
+#align(center)[_Without normalization we can't have decidable type checking!_]
 
 #pause
-_We must do propositional equality differently_
+#align(center)[_We must do propositional equality differently_]
 
 == Mapping Out Types
-
 $
   { c in Tm(Gamma. Upsilon, C) | rec } iso {star}
 $
-_we define $Upsilon$ by the terms it maps out to in $C$, hence the name_
+#align(center)[_we define $Upsilon$ by the terms it maps out to in $C$, hence the name_]
 #pause
-
-#figure(table(
+#figure(toptable(
   columns: 3,
   align: (center + horizon, center + horizon, center + horizon),
   $Upsilon(X)$, [signature], [initial algebra],
@@ -546,22 +617,41 @@ _we define $Upsilon$ by the terms it maps out to in $C$, hence the name_
   $bb(N)$, $X |-> 1 + X$, $zero, succ$, pause
 ))
 - *Formation Rule*: $Upsilon(X)$
-- *Introduction Rule(s)*: initial algebra constructors
-- *Elimination Rule*: $rec$
+- *Intro*: initial algebra constructors
+- *Elim*: $rec$
 
 #pagebreak()
 
-#figure(boxify([
+#align(center)[_the $Unit$ type now defined as a mapping out type_]
+
 $
-  script({ c in Tm(Gamma. Bool, C) | c_btrue = c[id. btrue] and c_bfalse = c[id. bfalse] } iso {star})
+  { c in Tm(Gamma. Unit, C) | c = c[id. tt] } iso {star}
 $
 #pause
-or 
 $
-  rec(b, c_btrue, c_bfalse) = cases(
-    c_btrue &#h(2em) b = btrue,
-    c_bfalse &#h(2em) b = bfalse
+  rec(tt, c) = c: C[id. tt]
+$
+#pause
+#figure(proof-tree(
+  rule(
+    name: [Unit-elim],
+    $Gamma hy rec(u, c) : C[id. u]$,
+    $Gamma hy u : Unit$,
+    $Gamma hy c : C[id. tt]$,
   )
+))
+
+#pagebreak()
+
+#align(center)[_the $Bool$ type is a mapping out type_]
+
+$
+  { c in Tm(Gamma. Bool, C) | c_btrue = c[id. btrue] and c_bfalse = c[id. bfalse] } iso {star}
+$
+#pause
+$
+  rec(btrue, c_btrue, c_bfalse) &= c_btrue: C[id. btrue] \
+  rec(bfalse, c_btrue, c_bfalse) &= c_bfalse: C[id. bfalse]
 $
 #pause
 #figure(proof-tree(
@@ -573,20 +663,18 @@ $
     $Gamma hy c_bfalse : C[id. bfalse]$
   )
 ))
-]))
+#pause
+#align(center)[_for $Bool$ often $rec$ is also written as $upright(bold("if"))$_]
 
 #pagebreak()
 
-#figure(boxify([
+#align(center)[_the disjoint sum type; $A+B$, is like a $Bool$ with arguments_]
 $
-  script({ c in Tm(Gamma. A + B, C) | c_A = c[id. inl a] and c_B = c[id. inr b] } iso {star})
+  { c in Tm(Gamma. A + B, C) | c_A = c[id. inl a] and c_B = c[id. inr b] } iso {star}
 $
-or 
 $
-  rec(o, c_A, c_B) = cases(
-    c_A &#h(2em) o = inl a,
-    c_B &#h(2em) o = inr b
-  )
+  rec(inl a, c_A, c_B) &= c_A : C[id. inl a] \
+  rec(inr b, c_A, c_B) &= c_B : C[id. inr b]
 $
 #figure(proof-tree(
   rule(
@@ -597,33 +685,72 @@ $
     $Gamma hy c_B : C[id. inr b]$
   )
 ))
-]))
+
+#pagebreak()
+
+#align(center)[_$bb(N)$ motivates why we call the elimination rule a recursor $rec$_]
+$
+  { c in Tm(Gamma. bb(N), C) | c_z = c[id. zero] and c_s [sp. sq. c] = c[sp. succ(sq)] } iso {star}
+$
+$
+rec(zero, c_z, c_s) &= c_z : C[id. zero] \
+rec(succ(n),c_z,c_s) &= c_s [id. n. rec(n, c_z, c_s)] : C[id. succ(n)]
+$
+#figure(proof-tree(
+  rule(
+    name: [$bb(N)$-elim],
+    $Gamma hy rec(n, c_z, c_s) : C[id. n]$,
+    $Gamma hy n : bb(N)$,
+    $Gamma. bb(N) hy C Ty$,
+    $Gamma hy c_z : C[id. zero]$,
+    $Gamma. bb(N). C hy c_s : C[sp^2. succ(sq[sp])]$
+  )
+))
+
+#pagebreak()
+
+#align(center)[_$Void$ has no recursor arguments in $C$_]
+$
+  Tm(Gamma. Void, C) iso {star}
+$
+
+#align(center)[$rec(v) : C[id. v]$ #h(2em) _often written as_ #h(2em) $absurd(v) : C[id. v]$]
+
+#figure(proof-tree(
+  rule(
+    name: [Void-elim],
+    $Gamma hy absurd(v) : C[id. v]$,
+    $Gamma hy v : Void$,
+    $Gamma. Void hy C Ty$
+  )
+))
+#align(center)[_notice how *ANY* term in $C$ that depends on $Void$ is uniquely $absurd(v)$_]
+
 
 == *Intensional Equality*
 
-- lets revisit the problem of propositional equality
-- if we define propositional equality as a mapping out type it will look as follows:
-#pause
+_We now try to define Propositional Equality as a mapping out type_
 $
   {c in Tm(Gamma. Id(A,a,b), C) | jrule } iso {star}
 $
-- *Intro Rule*: still produces $refl : Id(A,a,a)$
-- but what about the elimination rule?
-- we want it to have the properties of equality: reflexive, symmetric, transitive
-- *J rule* our elimination rule is a candidate as follows:
+- *Introduction Rule*: still the same $refl : Id(A,a,a)$
+- *Elimination Rule*: $jrule$
 
-#pagebreak()
 
 // #figure(table(
 //   columns: 3,
 // ))
-- *example Id type*
-- elim rule as J rule
-  - construct subst
-    - construct sym
-    - construct trans
-    - construct cong
-  - construct uniq
+
+#pagebreak()
+- construct subst
+- construct uniq
+
+#pagebreak()
+- construct sym
+- construct trans
+- construct cong
+
+#pagebreak()
 - no UIP; briefly on Hoffman-Streicher Groupoid Model
 - no funext; briefly on J being trivial in extensional TT
 - hoffman conservativity theorem
