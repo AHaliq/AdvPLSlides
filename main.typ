@@ -96,13 +96,24 @@
     subtitle: [H.O.T.T. from scratch],
     author: [Abdul Haliq],
     date: datetime.today(),
-    institution: [Aarhus University],
+    institution: text(
+            size: 1.2em,
+            font: ("AU Passata"),
+          )[#upper[Aarhus Universitet]],
   ),
 )
 
 #set heading(numbering: numbly("{1}.", default: "1.1"))
 
 #title-slide()
+
+== Motivation <touying:hidden>
+
+- *Types* in programming are a "compiler enforced" discipline to ensure well formed programs. i.e. $1 + 2$ would be legal unlike $1 + quote"a"quote$ #pause
+- *Strong Types* with features such as generics are able to express more general and also more specific guarantees i.e. vector of some type variable $X$, vector of ints vs vector of untyped values #pause
+- *Dependent Types* gives us a framework to express mathematics where terms are proofs and types are propositions. This automates verification of mathematical proofs and results, instead of relying on human experts. We can also now do formal methods that ensure correctness of programs rigorously using types. #pause
+- *Homotopy Type Theory* and univalence asserts that when types are equal we automatically have a map for terms from one type to the other. Thus given a proof / term in one type, for free we get the proof in the other. #pause
+- *Higher Observational Type Theory*: is one attempt at making HoTT practical (on a computer) using ideas from logical relations and parametricity.
 
 == Outline <touying:hidden>
 
@@ -145,7 +156,8 @@ figure(toptable(
 ))
 }
 - *Context*: lists of dependent terms
-#alternatives[][][][][
+#figure(
+alternatives[][][][][
 $
   a_1 : A_1
 $][
@@ -166,7 +178,7 @@ $
 $][
 $
  A_1.A_2.A_3. #h(0.25em)... #h(0.25em) .A_n
-$]
+$])
 
 #pause#pause#pause#pause#pause
 - *Substitutions*: shifts judgements from one context to another
@@ -229,7 +241,7 @@ figure(lefttable(
   alternatives[][][][][][][][][][][][*substitution extension*][substitution extension],
 ))
 }
-#alternatives[
+#figure(alternatives[
   #figure(proof-tree(
     rule(
       name: [substitution-term],
@@ -290,7 +302,7 @@ figure(lefttable(
       $Gamma hy A Ty$,
     )
   ))
-  _think as adding terms to context_
+  #align(center)[_think as adding terms to context_]
 ][
   #figure(proof-tree(
     rule(
@@ -299,7 +311,7 @@ figure(lefttable(
       $Gamma hy A Ty$,
     )
   ))
-  _think as debruijn indices at index number of $bold(upright(p))$_
+  #align(center)[_think as debruijn indices at index number of $bold(upright(p))$_]
 ][
   #figure(proof-tree(
     rule(
@@ -309,7 +321,7 @@ figure(lefttable(
       $Gamma . A hy B_1 Ty$
     )
   ))
-  _think as debruijn indices at index number of $bold(upright(p))$_
+  #align(center)[_think as debruijn indices at index number of $bold(upright(p))$_]
 ][
   #figure(proof-tree(
     rule(
@@ -319,7 +331,7 @@ figure(lefttable(
       $Gamma . A. B_1 hy B_2 Ty$
     )
   ))
-  _think as debruijn indices at index number of $bold(upright(p))$_
+  #align(center)[_think as debruijn indices at index number of $bold(upright(p))$_]
 ][
   #figure(proof-tree(
     rule(
@@ -330,7 +342,7 @@ figure(lefttable(
       $Gamma . A. B_1 ... B_(n-1) hy B_n Ty$
     )
   ))
-  _notationally informally we still write $a:A$_
+  #align(center)[_notationally informally we still write $a:A$_]
 ][
   #figure(proof-tree(
     rule(
@@ -341,11 +353,11 @@ figure(lefttable(
       $Delta hy a:A[gamma]$
     )
   ))
-  _think removing / dispensing terms from context_
-]
+  #align(center)[_think removing / dispensing terms from context_]
+])
 ])
 
-_the rules are justified / motivated by the natural model for dependent types_
+#align(center)[_the rules are justified / motivated by the natural model for dependent types_]
 #figure(diagram(cell-size: 30mm,
     $
       Delta
@@ -362,12 +374,12 @@ _the rules are justified / motivated by the natural model for dependent types_
       & Ty
     $
   ))
-_we notate $Tm(Gamma, A)$ for set of terms and $Ty(Gamma)$ for set of types_
+#align(center)[_we notate $Tm(Gamma, A)$ for set of terms and $Ty(Gamma)$ for set of types_]
 
 == Mapping In Types
 
 $
-  iota_(Gamma, X) : Tm(Gamma, Upsilon(X)) iso Y
+  iota_Gamma : Tm(Gamma, Upsilon(X)) iso Y
 $
 - Type $Upsilon$ is defined by the isomorphism with some set $Y$
 #pause
@@ -377,10 +389,10 @@ $
   columns: 2,
   align: (center + horizon, center + horizon),
   [Formation], $Upsilon$, pause,
-  [Introduction], $iota_(Gamma,X)^(-1)$, pause,
-  [Elimination], $iota_(Gamma,X)$, pause,
-  [Computation / $beta$], $iota_(Gamma,X) comp iota_(Gamma,X)^(-1) = id$, pause,
-  [Uniqueness / $eta$], $iota_(Gamma,X)^(-1) comp iota_(Gamma,X) = id$
+  [Introduction], $iota_Gamma^(-1)$, pause,
+  [Elimination], $iota_Gamma$, pause,
+  [Computation / $beta$], $iota_Gamma comp iota_Gamma^(-1) = id$, pause,
+  [Uniqueness / $eta$], $iota_Gamma^(-1) comp iota_Gamma = id$
 ))
 
 #pagebreak()
@@ -486,7 +498,7 @@ $
 #pagebreak()
 
 $
-  iota_Unit : Tm(Gamma, Unit) iso {star}
+  iota_Gamma : Tm(Gamma, Unit) iso {star}
 $
 
 #figure(lefttable(
@@ -515,21 +527,23 @@ $
 
 == Naturality
 
-_these isomorphisms respect substitution_
+#align(center)[_these isomorphisms respect substitution_]
 
 #figure(diagram(cell-size: 50mm,
 $
   Tm(Gamma, Upsilon(X))
     #edge("r", $iota_Gamma$, "<->")
-    #edge("d", $gamma$, "->")
+    #edge("d", $gamma^*$, "->")
   & Y
-    #edge("d", $gamma^*$, "->") \
+    #edge("d", $psi_gamma^*$, "->") \
   Tm(Delta, Upsilon(X))
     #edge("r", $iota_Delta$, "<->")
   & Y[gamma]
 $))
 
-_we have to define rules for these as well for the types and terms of  $Upsilon$_
+#align(center)[_we have to define rules for these as well for the types and terms of  $Upsilon$_
+
+_but we omit them in this presentation_]
 
 == *Extensional Equality*
 
@@ -679,7 +693,7 @@ $
 #figure(proof-tree(
   rule(
     name: [$A+B$-elim],
-    $Gamma hy rec(o, c_A, c_B) : C[id. b]$,
+    $Gamma hy rec(o, c_A, c_B) : C[id. o]$,
     $Gamma hy o : A + B$,
     $Gamma hy c_A : C[id. inl a]$,
     $Gamma hy c_B : C[id. inr b]$
@@ -734,44 +748,488 @@ $
   {c in Tm(Gamma. Id(A,a,b), C) | jrule } iso {star}
 $
 - *Introduction Rule*: still the same $refl : Id(A,a,a)$
-- *Elimination Rule*: $jrule$
-
-
-// #figure(table(
-//   columns: 3,
-// ))
-
-#pagebreak()
-- construct subst
-- construct uniq
-
-#pagebreak()
-- construct sym
-- construct trans
-- construct cong
+- *Elimination Rule*: $jrule$ when presented as a "functional program" is as follows:
+$
+  jrule :& {A:UU}\
+  &(C : (a, b: A) -> Id(A,a,b) -> Ty(Gamma)) \ #pause
+  -> & (a : A -> C(a,a,refl_a)) \ #pause
+  -> & a, b : A -> p : Id(A,a,b) \ #pause
+  -> & C(a,b,p)
+$
+#align(center)[_we will see why $jrule$ is justified to model equality as follows_]
 
 #pagebreak()
-- no UIP; briefly on Hoffman-Streicher Groupoid Model
-- no funext; briefly on J being trivial in extensional TT
-- hoffman conservativity theorem
+
+#align(center)[_to aid visualization, we introduce the homotopy interpretation of types_]
+- types are spaces
+- terms are points
+- identifications are paths
+#figure(cetz.canvas({
+  import cetz.draw: *
+  scale(x: 100%, y: 100%)
+  circle((1.5,-2), radius: (2.5,2), name: "B")
+  fill(black)
+  fill(black)
+  circle((0,-2), radius: 0.15, name: "a")
+  circle((3,-2), radius: 0.15, name: "b")
+  content("B.north", $A$, anchor: "south")
+  stroke(black)
+  line("a", "b", name: "line3", mark: (end: ">"))
+  stroke((paint: gray, dash: "dotted"))
+  content("a.south", [$a$], anchor: "north")
+  content("b.south", [$b$], anchor: "north")
+  content("line3.mid", $p$, anchor: "north")
+}))
+
+
+#pagebreak()
+$
+  jrule => subst
+$
+#figure(grid(
+  columns: 2,
+  align: (left + top, left + top),
+  gutter: 1em,
+  $
+  jrule :& {A : UU} \
+  &(C : (a, b: A) -> Id(A,a,b) -> Ty(Gamma)) \
+  -> & (a : A -> C#h(0.25em) a#h(0.25em) a#h(0.25em) refl_a) \
+  -> & a, b : A -> p : Id(A,a,b) \ 
+  -> & C#h(0.25em) a#h(0.25em) b#h(0.25em) p
+$,
+$
+  &subst {a, b: A} B #h(0.25em) p = jrule \ #pause
+  &#h(1em) lambda a#h(0.25em) b #h(0.25em) \_. (B#h(0.25em)  a -> B#h(0.25em)  b) \ #pause
+  &#h(1em) lambda\_. lambda b.b \ #pause
+  &#h(1em) a#h(0.25em) b#h(0.25em) p
+$
+))
+#figure(cetz.canvas({
+  import cetz.draw: *
+  scale(x: 100%, y: 100%)
+  circle((0,0), name: "L")
+  circle((3,0), name: "R")
+  circle((1.5,-2), radius: (2.5,0.7), name: "B")
+  fill(black)
+  circle((-0.5,0.3), radius: 0.15, name: "a1")
+  circle((0.4,-0.5), radius: 0.15, name: "a2")
+  circle((2.8,-0.5), radius: 0.15, name: "b2")
+  circle((3,0.3), radius: 0.15, name: "b1")
+  fill(black)
+  circle((3.7,-0.2), radius: 0.15)
+  circle((0,-2), radius: 0.15, name: "a")
+  circle((3,-2), radius: 0.15, name: "b")
+  content("L.north", [$B(a)$], anchor: "south")
+  content("R.north", [$B(b)$], anchor: "south")
+  content("B.north", $A$, anchor: "south")
+  stroke(black)
+  line("a", "b", name: "line3", mark: (end: ">"))
+  stroke((paint: purple, dash: "dashed"))
+  line("a1", "b1", name: "line1", mark: (end: ">"))
+  line("a2", "b2", name: "line2", mark: (end: ">"))
+  stroke((paint: gray, dash: "dotted"))
+  line("a", "L.west")
+  line("a", "L.east")
+  line("b", "R.west")
+  line("b", "R.east")
+  content("a.south", [$a$], anchor: "north")
+  content("b.south", [$b$], anchor: "north")
+  content("line3.mid", $p$, anchor: "north")
+}))
+#align(center)[_think $subst$ gives a function that "transports" terms in $B a$ to $B b$_]
+
+#pagebreak()
+$
+jrule => subst => sym
+$
+#figure(grid(
+  columns: 2,
+  align: (left + top, left + top),
+  gutter: 1em,
+  $
+  subst :& {a, b: A} \
+  & B : A -> UU \
+  -> & Id(A,a,b) \
+  -> & B #h(0.25em) a \
+  -> & B #h(0.25em) b \
+  $,
+  $
+    &sym p = subst \
+    &#h(1em) lambda x. Id(A,x,a) \
+    &#h(1em) p \
+    &#h(1em) refl_a
+  $
+))
+#figure(cetz.canvas({
+  import cetz.draw: *
+  scale(x: 100%, y: 100%)
+  circle((1.5,-2), radius: (2.5,1.3), name: "B")
+  fill(black)
+  circle((0,-2), radius: 0.15, name: "a")
+  circle((3,-2), radius: 0.15, name: "b")
+  stroke(black)
+  fill(none)
+  bezier("a.east", "b.west", (1.75,-3) ,name: "line3", mark: (end: (symbol: ">", fill: black)))
+  content("line3.mid", $p$, anchor: "north")
+  arc("a", start: 0deg, stop: 300deg, radius: 0.3, mark: (end: (symbol: ">", fill: purple)), name: "arc1")
+  stroke((paint: purple, dash: "dashed"))
+  bezier("b.north", "a.north", (1.75,-0.6), mark: (end: (symbol: ">", fill: purple)))
+  stroke((paint: gray, dash: "dotted"))
+  bezier("a", "b",(1.75,-1.7))
+  content("a.south", [$a$], anchor: "north")
+  content("b.south", [$b$], anchor: "north")
+  content("B.north", $A$, anchor: "south")
+}))
+#align(center)[_think $sym$ "drags" the origin of $refl_a$ along $p$ to get its "inverse"_]
+
+#pagebreak()
+$
+  jrule => subst => trans
+$
+#figure(grid(
+  columns: 2,
+  align: (left + top, left + top),
+  gutter: 1em,
+  $
+  subst :& {a, b: A} \
+  & B : A -> UU \
+  -> & Id(A,a,b) \
+  -> & B #h(0.25em) a \
+  -> & B #h(0.25em) b \
+  $,
+  $
+    &trans p#h(0.25em) q = subst\
+    &#h(1em) lambda x. Id(A,a,x) \
+    &#h(1em) p \
+    &#h(1em) q
+  $
+))
+#figure(cetz.canvas({
+  import cetz.draw: *
+  scale(x: 100%, y: 100%)
+  circle((1.5,-1.5), radius: (2.5,2), name: "B")
+  fill(black)
+  circle((0,-2), radius: 0.15, name: "a")
+  circle((3,-2), radius: 0.15, name: "b")
+  circle((3,-0.5), radius:0.15, name: "c")
+  stroke(black)
+  fill(none)
+  bezier("b.north", "c.south", (3.5,-1.5), name: "line1", mark: (end: (symbol: ">", fill: black)))
+  line("a.east", "b.west",name: "line3", mark: (end: (symbol: ">", fill: black)))
+  content("line3.mid", $p$, anchor: "north")
+  content("line1.mid", $q$, anchor: "west")
+  fill(none)
+  stroke((paint: purple, dash: "dashed"))
+  line("a", "c.west", mark: (end: (symbol: ">", fill: purple)))
+  stroke((paint: gray, dash: "dotted"))
+  bezier("b", "c",(2.1,-1.5))
+  content("a.south", [$a$], anchor: "north")
+  content("b.south", [$b$], anchor: "north")
+  content("c.north", [$c$], anchor: "south")
+  content("B.north", $A$, anchor: "south")
+}))
+#align(center)[_think $trans$ "drags" end of $p$ along $q$ to get the transitive_]
+
+#pagebreak()
+$
+  jrule => subst => cong
+$
+#figure(grid(
+  columns: 2,
+  align: (left + top, left + top),
+  gutter: 1em,
+  $
+  subst :& {a, b: A} \
+  & B : A -> UU \
+  -> & Id(A,a,b) \
+  -> & B #h(0.25em) a \
+  -> & B #h(0.25em) b \
+  $,
+  $
+    &cong f#h(0.25em) p = subst \
+    &#h(1em) lambda x. Id(B,f#h(0.25em) a, f#h(0.25em) x) \
+    &#h(1em) p \
+    &#h(1em) refl_(f#h(0.25em) a)
+  $
+))
+#figure(cetz.canvas({
+  import cetz.draw: *
+  scale(x: 100%, y: 100%)
+  circle((1.5,0.2), radius: (2.5,1), name: "A")
+  circle((1.5,-2), radius: (2.5,1), name: "B")
+  fill(black)
+  circle((0,-2), radius: 0.15, name: "fa")
+  circle((3,-2), radius: 0.15, name: "fb")
+  circle((0,0.2), radius: 0.15, name: "a")
+  circle((3,0.2), radius: 0.15, name: "b")
+  stroke(black)
+  line("a.east", "b.west", name: "line1", mark: (end: (symbol: ">", fill: black)))
+  stroke((paint: purple, dash: "dashed"))
+  line("fa.east", "fb.west", name: "line3", mark: (end: (symbol: ">", fill: purple)))
+  stroke((paint: gray, dash: "dotted"))
+  line("a", "fa", name: "line2", mark: (end: (symbol: ">", fill: gray)))
+  line("b", "fb", name: "line4", mark: (end: (symbol: ">", fill: gray)))
+  stroke(black)
+  fill(none)
+  arc("fa", start: 0deg, stop: 300deg, radius: 0.3, mark: (end: (symbol: ">", fill: black)), name: "arc1")
+  content("fa.south", [$f gap a$], anchor: "north-west")
+  content("fb.south", [$f gap b$], anchor: "north-east")
+  content("a.north", [$a$], anchor: "south-west")
+  content("b.north", [$b$], anchor: "south-east")
+  content("line1.mid", $p$, anchor: "north")
+  content("B.east", $B$, anchor: "west")
+  content("A.east", $A$, anchor: "west")
+}))
+#align(center)[_think $cong$ "drags" end of $refl_(f #h(0.25em) a)$ along a path in $B$ "parallel" to $p$_]
+
+#pagebreak()
+$
+  jrule => uniq
+$
+#align(center)[_let $[z] = Sigma(z : A, Id(A,x,z))$; points idetnfied with $z$_]
+#figure(grid(
+  columns: 2,
+  align: (left + top, left + top),
+  gutter: 1em,
+  $
+  jrule :& {A : UU} \
+  &(C : (a, b: A) -> Id(A,a,b) -> Ty(Gamma)) \
+  -> & (a : A -> C#h(0.25em) a#h(0.25em) a#h(0.25em) refl_a) \
+  -> & a, b : A -> p : Id(A,a,b) \ 
+  -> & C#h(0.25em) a#h(0.25em) b#h(0.25em) p
+  $,
+  $
+    &uniq {a : A} b #h(0.25em) p = jrule \ #pause
+    &#h(1em) lambda x, y, p'. Id([z], (x,refl_x), (y,p'))\ #pause
+    &#h(1em) lambda x. refl_(x, refl_x) \ #pause
+    &#h(1em) a#h(0.25em) b#h(0.25em) p
+  $
+))
+#figure(cetz.canvas({
+  import cetz.draw: *
+  scale(x: 100%, y: 100%)
+  circle((1.5,-2), radius: (2.5,1.3), name: "B")
+  fill(black)
+  circle((0,-2), radius: 0.15, name: "a")
+  circle((3,-2), radius: 0.15, name: "b")
+  stroke(black)
+  line("a", "b", name: "line3", mark: (end: (symbol: ">", fill: black)))
+  content("line3.mid", $p$, anchor: "north")
+  fill(none)
+  arc("a", start: 0deg, stop: 300deg, radius: 0.3, mark: (end: (symbol: ">", fill: black)), name: "arc1")
+  stroke((paint: purple, dash: "dashed"))
+  bezier("line3.mid", "arc1.north", (0.7,-0.6), mark: (end: (symbol: ">", fill: purple)))
+  content("a.south", [$a$], anchor: "north")
+  content("b.south", [$b$], anchor: "north")
+  content("B.north", $A$, anchor: "south")
+}))
+#align(center)[_think $uniq$ identifies all identities from $a$ to $b$ with $refl_a$_]
+
+
+#pagebreak()
+- *J is Independent*: $jrule$ can still be defined in an $Eq$ with reflection, but it will be a trivial structure due to UIP
+- *Function Extensionality (funext)*: We can't construct a term for such a type, assuming it as an axiom breaks canonicity (i.e. a bool term is judgementally neither true or false)
+$
+  "Funext" = (A: UU) -> (B: A -> UU) -> (f, g: (a: A) -> B#h(0.25em) a) \ -> ((a : A) -> Id(B#h(0.25em) a, f#h(0.25em) a, g #h(0.25em) a)) -> Id((a: A) -> B#h(0.25em) a, f, g)
+$
+- *No UIP*: We can't construct a term for such a type
+$
+  "UIP" &= (A: UU) -> (a, b: A) -> (p, q : Id(A,a,b)) -> Id(Id(A,a,b),p,q) \
+$
+- *Axiom K*: but we can add a second eliminator that identifies identifications of a term to itself with refl to recover UIP whilst still having canonicity and normalization
+- *Hoffman Conservativity Theorem*: all propositions that are provable (construct terms for a type) in ETT but not in ITT boils down to funext and UIP
 
 == Universes
 
-- isomorphism
-  - code
-  - El
-- lift
-- uni
-- cumulative universes; to avoid impredicativity; paradoxes
+- *Full Spectrum*: To use types in our theory, we need a notion of a universe whose terms are types, thus we can omit the formation rules of $Upsilon$ for introduction rules of $UU$
+#figure(diagram(cell-size: 10mm, $
+Tm(Gamma, UU) 
+  edge("r", El, "->", bend: #30deg) 
+  edge("r", code, "<-", bend: #{-30deg}) &
+Ty(Gamma)
+$))
+
+- *Recursive Types*: i.e. $Pi(UU,-)$ can't be made without having a code for $UU : UU$, but doing so causes impredicative paradoxes making the theory inconsistent (we won't prove it here), thus we make a infinite hierarchy of cumulative universes
+#figure(grid(columns: (1fr, 1fr), align: (center + horizon, center + horizon),
+proof-tree(rule(
+  name: [Lifting],
+  $Gamma hy lift_i(c) : UU_(i+1)$,
+  $Gamma hy c : UU_i$
+)),
+proof-tree(rule(
+  name: [Universe],
+  $Gamma hy uni_(i,j) : UU_i$,
+  $j < i$,
+  $Gamma hy UU_i type$,
+  $Gamma hy UU_j type$
+))
+))
 
 == *Univalence*
 
-- a specific $C$ in $"Tm"(Gamma."Id"(U,A,B),C)$
-- bimaps / iso : HProp
-  - construction
-- contractible fibres / equiv : U
-  - construction
-- axioms break canonicity
+$
+  { p in Tm(Gamma. Id(UU, A, B), C) | ua } iso {star}
+$
+- we want $C$ to work as a "bridge" that brings proofs in $A$ to $B$ #pause
+- naively we might consider the isomorphisms or bimaps, but this is too strong a condition that it only works on a subset of $UU$ called $HProp$ which are homotopy propositions, types with only one term
+
+#pagebreak()
+$
+  Tm(Gamma. Id(HProp, A, B), iso) iso {star} \ #pause
+  (A =_HProp B) iso (A iso B) #pause
+$
+$
+  A iso B &= Sigma((f,g) : A <-> B, "areIso"(f,g)) \ #pause
+  A <-> B &= (A -> B) times (B -> A) \ #pause
+  "areIso"(f,g) &= Id(A -> A, g comp f, id) times Id(B -> B, f comp g, id) #pause
+$
+#align(center)[_think both types need to have the same amount of terms; this is too restrictive_]
+
+#figure(cetz.canvas({
+  import cetz.draw: *
+  scale(x: 60%, y: 60%)
+  circle((0,0), name: "L")
+  circle((3,0), name: "R")
+  circle((1.5,0), radius: (3,2), name: "HProp")
+  fill(black)
+  circle((0,0), radius: 0.15, name: "a1")
+  circle((3,0), radius: 0.15, name: "b1")
+  fill(black)
+  content("L.north", [$A$], anchor: "south")
+  content("R.north", [$B$], anchor: "south")
+  content("HProp.north", $HProp$, anchor: "south")
+  stroke(black)
+  stroke((paint: purple, dash: "dashed"))
+  line("a1.east", "b1.west", name: "line1", mark: (end: ">", start: ">"))
+}))
+#align(center)[_elim as $p |->(subst id p, subst id (sym p))$ and intro an identification given an iso_]
+
+#pagebreak()
+$
+  Tm(Gamma. Id(UU, A, B), equiv) equiv {star} \ #pause
+  (A = B) equiv (A equiv B) #pause
+$
+$
+  "fib"(f,b) &= Sigma(a: A, Id(B, f#h(0.25em) a, b)) \ #pause
+  "isContr"(X) &= Sigma(x: X, Pi(y: X, Id(X, x, y))) \ #pause
+  "isEquiv"(f) &= Pi(b: B, "isContr"("fib"(f,b))) \ #pause
+  A equiv B &= Sigma(f: A -> B, "isEquiv"(f))
+$
+#meanwhile
+#figure(toptable(columns: 4, align: (center + horizon, center + horizon, center + horizon, center + horizon),
+[fibre], [contractible], [contractible fibre], [univalence],
+figure(cetz.canvas({
+  import cetz.draw: *
+  scale(x: 60%, y: 60%)
+  circle((0,0), radius:(1,1.5), name: "L")
+  circle((3,0), radius:(1,1.5), name: "R")
+  fill(black)
+  circle((0,1), radius: 0.15, name: "a1")
+  circle((0,0.25), radius: 0.15, name: "a2")
+  circle((0,-0.5), radius: 0.15, name: "a3")
+  circle((0,-1.2), radius: 0.15, name: "a4")
+  circle((2.75,0.8), radius: 0.15, name: "b1")
+  circle((2.75,0), radius: 0.15, name: "b2")
+  circle((2.75,-0.8), radius: 0.15, name: "b3")
+  circle((3.75,0), radius: 0.15, name: "b4")
+  circle((3.2,-1), radius: 0.15, name: "b5")
+  fill(black)
+  content("L.north", [$A$], anchor: "south")
+  content("R.north", [$B$], anchor: "south")
+  stroke(black)
+  stroke((paint: gray, dash: "dotted"))
+  line("a1.east", "b1.west", name: "line1", mark: (end: ">"))
+  content("line1.mid", $f$, anchor: "south")
+  line("a2.east", "b2.west", name: "line2", mark: (end: ">"))
+  line("a3.east", "b3.west", name: "line3", mark: (end: ">"))
+  stroke((paint: purple, dash: "solid"))
+  line("b1.east", "b4.north", name: "line4", mark: (end: ">"))
+  line("b2.east", "b4.west", name: "line5", mark: (end: ">"))
+  line("b3.east", "b4.south", name: "line6", mark: (end: ">"))
+})),
+figure(cetz.canvas({
+  import cetz.draw: *
+  scale(x: 60%, y: 60%)
+  circle((0,0), radius:(1.5,1.5), name: "X")
+  content("X.north", $X$, anchor: "south")
+  fill(black)
+  circle((0,0.75), radius: 0.15, name: "x1")
+  content("x1.east", $x$, anchor: "west")
+  circle((-0.75,-0.5), radius: 0.15, name: "x2")
+  circle((0,-0.75), radius: 0.15, name: "x3")
+  circle((0.75,-0.5), radius: 0.15, name: "x4")
+
+  stroke((paint: purple, dash: "solid"))
+  line("x1.south", "x2.north", name: "line1", mark: (end: ">"))
+  line("x1.south", "x3.north", name: "line1", mark: (end: ">"))
+  line("x1.south", "x4.north", name: "line1", mark: (end: ">"))
+})),
+figure(cetz.canvas({
+  import cetz.draw: *
+  scale(x: 60%, y: 60%)
+  circle((0,0), radius:(1,1.5), name: "L")
+  circle((3,0), radius:(1,1.5), name: "R")
+  fill(black)
+  circle((0,0.8), radius: 0.15, name: "a1")
+  fill(purple)
+  stroke(purple)
+  circle((0,0), radius: 0.15, name: "a2")
+  fill(black)
+  stroke(black)
+  circle((0,-0.8), radius: 0.15, name: "a3")
+  circle((2.75,0.8), radius: 0.15, name: "b1")
+  circle((2.75,0), radius: 0.15, name: "b2")
+  circle((2.75,-0.8), radius: 0.15, name: "b3")
+  circle((3.75,0), radius: 0.15, name: "b4")
+  fill(black)
+  content("L.north", [$A$], anchor: "south")
+  content("R.north", [$B$], anchor: "south")
+  stroke(black)
+  stroke((paint: gray, dash: "dotted"))
+  line("a1.east", "b1.west", name: "line1", mark: (end: ">"))
+  content("line1.mid", $f$, anchor: "south")
+  line("a2.east", "b2.west", name: "line2", mark: (end: ">"))
+  line("a3.east", "b3.west", name: "line3", mark: (end: ">"))
+  stroke((paint: black, dash: "solid"))
+  line("b1.east", "b4.north", name: "line4", mark: (end: ">"))
+  line("b2.east", "b4.west", name: "line5", mark: (end: ">"))
+  line("b3.east", "b4.south", name: "line6", mark: (end: ">"))
+  stroke((paint: purple, dash: "solid"))
+  line("a2.north", "a1.south", mark: (end: ">"))
+  line("a2.south", "a3.north", mark: (end: ">"))
+  line("line5.25%", "line4.25%", mark: (end: ">"))
+  line("line5.25%", "line6.25%", mark: (end: ">"))
+})),
+figure(cetz.canvas({
+  import cetz.draw: *
+  scale(x: 60%, y: 60%)
+  circle((0,0), radius:(1,1.5), name: "L")
+  circle((3,0), radius:(1,1.5), name: "R")
+  circle((1.5,0), radius: (3,2.5), name: "UU")
+  circle((0,0), radius: (0.3,0.5), name: "a1")
+  circle((-0.2,0.5), radius: (0.3,0.5), name: "a2")
+  circle((0,-0.7), radius: (0.3,0.5), name: "a3")
+  circle((3,0), radius: (0.3,0.5), name: "b1")
+  circle((2.7,0.8), radius: (0.3,0.5), name: "b2")
+  circle((3.1,-0.5), radius: (0.3,0.5), name: "b3")
+  fill(black)
+  content("L.north", [$A$], anchor: "south")
+  content("R.north", [$B$], anchor: "south")
+  content("UU.north", $UU$, anchor: "south")
+  stroke(black)
+  stroke((paint: purple, dash: "dashed"))
+  line("a1.east", "b1.west", name: "line1", mark: (end: ">"))
+  line("a2.east", "b2.west", name: "line2", mark: (end: ">"))
+  line("a3.east", "b3.west", name: "line3", mark: (end: ">"))
+}))
+))
+
+== Concluding Example
+
+- term $bb(N)$ of isEven
+- use $ua$ to get isEven for big integer
+- note on ua as an axiom, thus we can't compute it, we don't have it in a theorem prover
+- thus higher observational type theeory
 
 = HOTT from HoTT
 
