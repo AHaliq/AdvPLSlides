@@ -93,7 +93,7 @@
   // config-common(handout: true),
   config-info(
     title: [Equality and Isomorphisms in Type Theory],
-    subtitle: [H.O.T.T. from scratch],
+    subtitle: [HoTT from scratch],
     author: [Abdul Haliq],
     date: datetime.today(),
     institution: text(
@@ -112,14 +112,14 @@
 - *Types* in programming are a "compiler enforced" discipline to ensure well formed programs. i.e. $1 + 2$ would be legal unlike $1 + quote"a"quote$ #pause
 - *Strong Types* with features such as generics are able to express more general and also more specific guarantees i.e. vector of some type variable $X$, vector of ints vs vector of untyped values #pause
 - *Dependent Types* gives us a framework to express mathematics where terms are proofs and types are propositions. This automates verification of mathematical proofs and results, instead of relying on human experts. We can also now do formal methods that ensure correctness of programs rigorously using types. #pause
-- *Homotopy Type Theory* and univalence asserts that when types are equal we automatically have a map for terms from one type to the other. Thus given a proof / term in one type, for free we get the proof in the other. #pause
+- *Homotopy Type Theory* and univalence asserts that when types are equal we automatically have a map for terms from one type to the other. Thus given a proof / term in one type, for free we get the proof in the other; proof transfer #pause
 - *Higher Observational Type Theory*: is one attempt at making HoTT practical (on a computer) using ideas from logical relations and parametricity.
 
 == Outline <touying:hidden>
 
 #components.adaptive-columns(outline(title: none, indent: 1em))
 
-= HoTT from scratch
+= Substitution Calculus
 
 == Deductive Systems
 
@@ -188,6 +188,7 @@ $])
   $Delta hy gamma : Gamma$
 ))))
 ])
+
 == *Definitional Equality*
 
 
@@ -217,7 +218,6 @@ _definitionally equal symbols can be replaced by each other_
 
 
 == Natural Models
-
 
 #slide(repeat: 12, self => [
   #let (uncover, only, alternatives) = utils.methods(self)
@@ -376,7 +376,9 @@ figure(lefttable(
   ))
 #align(center)[_we notate $Tm(Gamma, A)$ for set of terms and $Ty(Gamma)$ for set of types_]
 
-== Mapping In Types
+= Mapping In Types
+
+== Generally
 
 $
   iota_Gamma : Tm(Gamma, Upsilon(X)) iso Y
@@ -395,7 +397,7 @@ $
   [Uniqueness / $eta$], $iota_Gamma^(-1) comp iota_Gamma = id$
 ))
 
-#pagebreak()
+== $Pi$
 
 $
   iota_Gamma : Tm(Gamma, Pi(A,B)) iso Tm(Gamma. A, B)
@@ -448,8 +450,7 @@ $
   ))
 ))
 
-#pagebreak()
-
+== $Sigma$
 
 $
   iota_Gamma : Tm(Gamma, Sigma(A,B)) iso bold(upright(Sigma))_(a:Tm(Gamma, A)) Tm(Gamma, B[id. a])
@@ -495,7 +496,7 @@ $
   ))
 ))
 
-#pagebreak()
+== $Unit$
 
 $
   iota_Gamma : Tm(Gamma, Unit) iso {star}
@@ -536,7 +537,7 @@ $
     #edge("d", $gamma^*$, "->")
   & Y
     #edge("d", $psi_gamma^*$, "->") \
-  Tm(Delta, Upsilon(X))
+  Tm(Delta, Upsilon(X[gamma]))
     #edge("r", $iota_Delta$, "<->")
   & Y[gamma]
 $))
@@ -602,7 +603,8 @@ $
 #pause
 - e.g. with $p:Eq(bb(N), a + b, b + a)$ we can swap $a + b$ for $b + a$ in lets say an argument for length of a vector without having to evaluate $a$ and $b$
 
-#pagebreak()
+== Metatheory of $Eq$
+
 - *Uniqueness of Identity Proofs (UIP)*: there is only one proof of equality between two terms due to equality reflection, i.e. $p,q:Eq(A,a,b)$ means $p=q$
 #pause
 - *Injectivity*: distinct terms are mapped to distinct terms. But in UIP, all proofs of equality are mapped to $star$ i.e. $Gamma hy a = b : A$
@@ -614,7 +616,10 @@ $
 #pause
 #align(center)[_We must do propositional equality differently_]
 
-== Mapping Out Types
+= Mapping Out Types
+
+== Inductive Types
+
 $
   { c in Tm(Gamma. Upsilon, C) | rec } iso {star}
 $
@@ -634,7 +639,7 @@ $
 - *Intro*: initial algebra constructors
 - *Elim*: $rec$
 
-#pagebreak()
+== $Unit$
 
 #align(center)[_the $Unit$ type now defined as a mapping out type_]
 
@@ -655,7 +660,7 @@ $
   )
 ))
 
-#pagebreak()
+== $Bool$
 
 #align(center)[_the $Bool$ type is a mapping out type_]
 
@@ -680,7 +685,7 @@ $
 #pause
 #align(center)[_for $Bool$ often $rec$ is also written as $upright(bold("if"))$_]
 
-#pagebreak()
+== $A + B$
 
 #align(center)[_the disjoint sum type; $A+B$, is like a $Bool$ with arguments_]
 $
@@ -700,7 +705,7 @@ $
   )
 ))
 
-#pagebreak()
+== $bb(N)$
 
 #align(center)[_$bb(N)$ motivates why we call the elimination rule a recursor $rec$_]
 $
@@ -721,7 +726,7 @@ $
   )
 ))
 
-#pagebreak()
+== $Void$
 
 #align(center)[_$Void$ has no recursor arguments in $C$_]
 $
@@ -741,7 +746,9 @@ $
 #align(center)[_notice how *ANY* term in $C$ that depends on $Void$ is uniquely $absurd(v)$_]
 
 
-== *Intensional Equality*
+= *Intensional Equality*
+
+== Generally
 
 _We now try to define Propositional Equality as a mapping out type_
 $
@@ -758,7 +765,7 @@ $
 $
 #align(center)[_we will see why $jrule$ is justified to model equality as follows_]
 
-#pagebreak()
+== Voevodsky
 
 #align(center)[_to aid visualization, we introduce the homotopy interpretation of types_]
 - types are spaces
@@ -782,7 +789,8 @@ $
 }))
 
 
-#pagebreak()
+== $subst$
+
 $
   jrule => subst
 $
@@ -795,7 +803,7 @@ $
   &(C : (a, b: A) -> Id(A,a,b) -> Ty(Gamma)) \
   -> & (a : A -> C#h(0.25em) a#h(0.25em) a#h(0.25em) refl_a) \
   -> & a, b : A -> p : Id(A,a,b) \ 
-  -> & C#h(0.25em) a#h(0.25em) b#h(0.25em) p
+  -> & C(a,b,p)
 $,
 $
   &subst {a, b: A} B #h(0.25em) p = jrule \ #pause
@@ -838,7 +846,8 @@ $
 }))
 #align(center)[_think $subst$ gives a function that "transports" terms in $B a$ to $B b$_]
 
-#pagebreak()
+== $sym$
+
 $
 jrule => subst => sym
 $
@@ -847,7 +856,7 @@ $
   align: (left + top, left + top),
   gutter: 1em,
   $
-  subst :& {a, b: A} \
+  subst :& {a, b : A} \
   & B : A -> UU \
   -> & Id(A,a,b) \
   -> & B #h(0.25em) a \
@@ -882,7 +891,8 @@ $
 }))
 #align(center)[_think $sym$ "drags" the origin of $refl_a$ along $p$ to get its "inverse"_]
 
-#pagebreak()
+== $trans$
+
 $
   jrule => subst => trans
 $
@@ -891,7 +901,7 @@ $
   align: (left + top, left + top),
   gutter: 1em,
   $
-  subst :& {a, b: A} \
+  subst :& {a, b : A} \
   & B : A -> UU \
   -> & Id(A,a,b) \
   -> & B #h(0.25em) a \
@@ -930,7 +940,8 @@ $
 }))
 #align(center)[_think $trans$ "drags" end of $p$ along $q$ to get the transitive_]
 
-#pagebreak()
+== $cong$
+
 $
   jrule => subst => cong
 $
@@ -939,7 +950,7 @@ $
   align: (left + top, left + top),
   gutter: 1em,
   $
-  subst :& {a, b: A} \
+  subst :& {a, b : A} \
   & B : A -> UU \
   -> & Id(A,a,b) \
   -> & B #h(0.25em) a \
@@ -982,7 +993,8 @@ $
 }))
 #align(center)[_think $cong$ "drags" end of $refl_(f #h(0.25em) a)$ along a path in $B$ "parallel" to $p$_]
 
-#pagebreak()
+== $uniq$
+
 $
   jrule => uniq
 $
@@ -996,7 +1008,7 @@ $
   &(C : (a, b: A) -> Id(A,a,b) -> Ty(Gamma)) \
   -> & (a : A -> C#h(0.25em) a#h(0.25em) a#h(0.25em) refl_a) \
   -> & a, b : A -> p : Id(A,a,b) \ 
-  -> & C#h(0.25em) a#h(0.25em) b#h(0.25em) p
+  -> & C(a,b,p)
   $,
   $
     &uniq {a : A} b #h(0.25em) p = jrule \ #pause
@@ -1026,17 +1038,18 @@ $
 #align(center)[_think $uniq$ identifies all identities from $a$ to $b$ with $refl_a$_]
 
 
-#pagebreak()
-- *J is Independent*: $jrule$ can still be defined in an $Eq$ with reflection, but it will be a trivial structure due to UIP
+== Metatheory of $Id$
+
+- *J is Independent*: $jrule$ can still be defined in an $Eq$ with reflection, but it will be a trivial structure due to UIP #pause
 - *Function Extensionality (funext)*: We can't construct a term for such a type, assuming it as an axiom breaks canonicity (i.e. a bool term is judgementally neither true or false)
 $
   "Funext" = (A: UU) -> (B: A -> UU) -> (f, g: (a: A) -> B#h(0.25em) a) \ -> ((a : A) -> Id(B#h(0.25em) a, f#h(0.25em) a, g #h(0.25em) a)) -> Id((a: A) -> B#h(0.25em) a, f, g)
-$
+$ #pause
 - *No UIP*: We can't construct a term for such a type
 $
   "UIP" &= (A: UU) -> (a, b: A) -> (p, q : Id(A,a,b)) -> Id(Id(A,a,b),p,q) \
-$
-- *Axiom K*: but we can add a second eliminator that identifies identifications of a term to itself with refl to recover UIP whilst still having canonicity and normalization
+$ #pause
+- *Axiom K*: but we can add a second eliminator that identifies identifications of a term to itself with refl to recover UIP whilst still having canonicity and normalization #pause
 - *Hoffman Conservativity Theorem*: all propositions that are provable (construct terms for a type) in ETT but not in ITT boils down to funext and UIP
 
 == Universes
@@ -1048,6 +1061,7 @@ Tm(Gamma, UU)
   edge("r", code, "<-", bend: #{-30deg}) &
 Ty(Gamma)
 $))
+- thus we have dependent version of $rec$ called $ind$ for inductive types now #pause
 
 - *Recursive Types*: i.e. $Pi(UU,-)$ can't be made without having a code for $UU : UU$, but doing so causes impredicative paradoxes making the theory inconsistent (we won't prove it here), thus we make a infinite hierarchy of cumulative universes
 #figure(grid(columns: (1fr, 1fr), align: (center + horizon, center + horizon),
@@ -1065,23 +1079,36 @@ proof-tree(rule(
 ))
 ))
 
-== *Univalence*
+= *Univalence*
+
+== Generally
 
 $
-  { p in Tm(Gamma. Id(UU, A, B), C) | ua } iso {star}
+  { p in Tm(Gamma. Id(U, A, B), C) | u } iso {star}
 $
 - we want $C$ to work as a "bridge" that brings proofs in $A$ to $B$ #pause
-- naively we might consider the isomorphisms or bimaps, but this is too strong a condition that it only works on a subset of $UU$ called $HProp$ which are homotopy propositions, types with only one term
-
-#pagebreak()
 $
-  Tm(Gamma. Id(HProp, A, B), iso) iso {star} \ #pause
-  (A =_HProp B) iso (A iso B) #pause
+  u : C(p : Id(U,A,B), C(A,B), p)
+$
+- the universe is said to be univalent if the map from the identification to $C$ is $C$ as well #pause
+- naively we might consider the isomorphisms or bimaps, but this is too strong a condition that it only works on a subset of $UU$ called $HProp$ which are homotopy propositions, types with only one term, but we will explore them to motivate the full definition
+
+== Prop Univalence
+
+$
+  { p in Tm(Gamma. Id(HProp, A, B), iso) | "propUnivalence" } iso {star} \ #pause
+$
+$
+  "propUnivalence" : (A =_HProp B) iso (A iso B) #pause \
 $
 $
   A iso B &= Sigma((f,g) : A <-> B, "areIso"(f,g)) \ #pause
   A <-> B &= (A -> B) times (B -> A) \ #pause
   "areIso"(f,g) &= Id(A -> A, g comp f, id) times Id(B -> B, f comp g, id) #pause
+$
+$
+  script("propUnivalence" #h(0.25em) p = (subst id p, subst id (sym p), ...)), 
+  script("propUnivalence"^(-1) #h(0.25em) (f,g,i) = p)
 $
 #align(center)[_think both types need to have the same amount of terms; this is too restrictive_]
 
@@ -1102,18 +1129,18 @@ $
   stroke((paint: purple, dash: "dashed"))
   line("a1.east", "b1.west", name: "line1", mark: (end: ">", start: ">"))
 }))
-#align(center)[_elim as $p |->(subst id p, subst id (sym p))$ and intro an identification given an iso_]
 
-#pagebreak()
+== Full Univalence
+
 $
-  Tm(Gamma. Id(UU, A, B), equiv) equiv {star} \ #pause
-  (A = B) equiv (A equiv B) #pause
+  { p in Tm(Gamma. Id(UU, A, B), equiv) | ua } iso {star} \ #pause
+  ua : (A = B) equiv (A equiv B) #pause
 $
 $
-  "fib"(f,b) &= Sigma(a: A, Id(B, f#h(0.25em) a, b)) \ #pause
-  "isContr"(X) &= Sigma(x: X, Pi(y: X, Id(X, x, y))) \ #pause
-  "isEquiv"(f) &= Pi(b: B, "isContr"("fib"(f,b))) \ #pause
-  A equiv B &= Sigma(f: A -> B, "isEquiv"(f))
+  "fib"(f,b) &= Sigma(a : A, Id(B, f#h(0.25em) a, b)) \ #pause
+  "isContr"(X) &= Sigma(x : X, Pi(y : X, Id(X, x, y))) \ #pause
+  "isEquiv"(f) &= Pi(b : B, "isContr"("fib"(f,b))) \ #pause
+  A equiv B &= Sigma(f : A -> B, "isEquiv"(f))
 $
 #meanwhile
 #figure(toptable(columns: 4, align: (center + horizon, center + horizon, center + horizon, center + horizon),
@@ -1224,17 +1251,49 @@ figure(cetz.canvas({
 }))
 ))
 
-== Concluding Example
+= Conclusion
 
-- term $bb(N)$ of isEven
-- use $ua$ to get isEven for big integer
-- note on ua as an axiom, thus we can't compute it, we don't have it in a theorem prover
-- thus higher observational type theeory
+== Example
 
-= HOTT from HoTT
+- Let $N$ be the type of binary encoded big unsigned integers
+- Let $bb(N)$ be the inductive type of peano natural numbers #pause
+- Given $"isEven"_bb(N) : bb(N) -> Bool$ and $p : Id(UU, N, bb(N))$ #pause
+$
+  "isEven"_N &: N -> Bool \
+  "isEven"_N (n) &= "isEven"_bb(N) comp (upright(bold("fst")) comp ua p) #h(0.25em) n
+$
+- without "using" the structure of $N$ we get $"isEven"_N$ for free!
+- this is called proof transfer
+#pause
+- $ua$ is an axiom, thus we can't implement it in a theorem prover
+- an attempt at resolving this uses ideas from logical relations and parametricity to get univalent parametricity #pause
+#align(center)[_until next time_] 
 
-== Observational Equality
+== Summary
 
-== Parametricity
+$
+  Gamma hy a = b : A
+$
+- definitional equality by syntax wont allow us to specify equalities depending on a type
+#pause
+$
+  Tm(Gamma, Eq(A,a,b))
+$
+- ETT; propositional equality via reflection breaks normalization
+#pause
+$
+  Tm(Gamma. Id(A,a,b), C) 
+$
+- ITT; propositional equality via intensional equality hints at higher structures without UIP
+#pause
+$
+  { p in Tm(Gamma. Id(UU, A, B), tilde.eq) | ua } iso {star} \
+  ua : (A = B) tilde.eq (A tilde.eq B)
+$
+- HoTT; univalence allows us to do proof transfer#pause ; theoretically. Theres more to be done
 
-== *Parametric Univalence*
+= Thank You <touying:hidden>
+
+#focus-slide[
+  #smallcaps([Thank You])
+]
